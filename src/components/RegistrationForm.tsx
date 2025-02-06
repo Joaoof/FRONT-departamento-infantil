@@ -6,34 +6,38 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent } from "@/components/ui/card"
 import Link from "next/link"
 import Image from "next/image"
+import axios from 'axios'
 
 export function RegistrationForm() {
     const [nome, setNome] = useState('')
-    const [email, setEmail] = useState('')
+    const [nomeCrianca, setNomeCrianca] = useState('')
     const [telefone, setTelefone] = useState('')
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
 
         try {
-            const response = await fetch('/api/register', {
+            const response = await axios('http://localhost:3001/api/register', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ nome, email, telefone })
+                data: { nome, nomeCrianca, telefone }
             });
 
-            if (!response.ok) {
+            console.log(response);
+
+
+            if (!response.data) {
                 throw new Error('Erro ao registrar os dados.');
             }
 
-            const data = await response.json();
+            const data = await response.data;
             const generatedId = data.id;
 
             // Monta a mensagem que será enviada via WhatsApp
             const message = encodeURIComponent(
                 `Olá ${nome}, seu cadastro foi realizado com sucesso!\n` +
                 `ID do cadastro: ${generatedId}\n` +
-                `Nome da criança: ${email}`  // ou outro campo se for o nome da criança
+                `Nome da criança: ${nomeCrianca}`  // ou outro campo se for o nome da criança
             );
 
             // Neste exemplo, a mensagem será enviada para o próprio número cadastrado.
@@ -71,13 +75,13 @@ export function RegistrationForm() {
                         </div>
 
                         <div className="space-y-2">
-                            <label htmlFor="nome-crianca" className="text-sm font-medium text-gray-700">
+                            <label htmlFor="nomeCrianca" className="text-sm font-medium text-gray-700">
                                 Nome da criança
                             </label>
                             <Input
-                                id="nome-crianca"
-                                value={email}  // ajuste se esse campo for para o nome da criança
-                                onChange={(e) => setEmail(e.target.value)}
+                                id="nomeCrianca"
+                                value={nomeCrianca}  // ajuste se esse campo for para o nome da criança
+                                onChange={(e) => setNomeCrianca(e.target.value)}
                                 placeholder="João Júnior"
                                 required
                             />
