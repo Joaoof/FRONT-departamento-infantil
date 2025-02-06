@@ -17,7 +17,8 @@ export function RegistrationForm() {
         e.preventDefault()
 
         try {
-            const response = await axios('http://localhost:3001/api/register', {
+            const api_url = process.env.NEXT_PUBLIC_API_URL;
+            const response = await axios(`${api_url}/api/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 data: { nome, nomeCrianca, telefone }
