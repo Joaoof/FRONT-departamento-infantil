@@ -1,8 +1,8 @@
 // app/cadastro/page.tsx
 "use client"
 
-import { Illustration } from "@/components/Illustration"
-import { RegistrationForm } from "@/components/RegistrationForm"
+import { Illustration } from "@/app/components/Illustration"
+import { RegistrationForm } from "@/app/components/RegistrationForm"
 
 export default function CadastroPage() {
   return (
