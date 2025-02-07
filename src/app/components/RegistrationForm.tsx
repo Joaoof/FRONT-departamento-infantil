@@ -21,6 +21,9 @@ export function RegistrationForm() {
 
     // Ao clicar em "Confirmar", abre imediatamente o pop-up e processa o envio
     const handleConfirm = async () => {
+
+        const sanitizedPhone = telefone.replace(/\s+/g, '');
+
         // Abre o pop-up imediatamente (ação diretamente disparada pelo clique do usuário)
         const popup = window.open('', '_blank')
         if (!popup) {
@@ -31,7 +34,7 @@ export function RegistrationForm() {
             const api_url = process.env.NEXT_PUBLIC_API_URL
             const response = await axios.post(
                 `${api_url}/api/register`,
-                { nome, nomeCrianca, telefone },
+                { nome, nomeCrianca, telefone: sanitizedPhone },
                 { headers: { 'Content-Type': 'application/json' } }
             )
 
@@ -48,7 +51,7 @@ export function RegistrationForm() {
                 `ID do cadastro: ${generatedId}\n` +
                 `Nome da criança: ${nomeCrianca}`
             )
-            const whatsappURL = `https://wa.me/${telefone}?text=${message}`
+            const whatsappURL = `https://wa.me/${sanitizedPhone}?text=${message}`
 
             // Atualiza a URL do pop-up para redirecionar para o WhatsApp
             popup.location.href = whatsappURL
