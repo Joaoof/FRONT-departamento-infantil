@@ -15,36 +15,46 @@ export function RegistrationForm() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
 
+        // Abre a janela popup imediatamente (ação disparada pelo clique do usuário)
+        const popup = window.open("", "_blank")
+        if (!popup) {
+            console.error("Popup bloqueado pelo navegador.")
+            return
+        }
+
         try {
             const api_url = process.env.NEXT_PUBLIC_API_URL;
             const response = await axios(`${api_url}/api/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 data: { nome, nomeCrianca, telefone }
-            });
+            })
 
-            console.log(response);
+            console.log(response)
 
             if (!response.data) {
-                throw new Error('Erro ao registrar os dados.');
+                throw new Error('Erro ao registrar os dados.')
             }
 
-            const data = await response.data;
-            const generatedId = data.id;
+            const data = response.data // Não é necessário await aqui novamente
+            const generatedId = data.id
 
             // Monta a mensagem que será enviada via WhatsApp
             const message = encodeURIComponent(
                 `Olá ${nome}, seu cadastro foi realizado com sucesso!\n` +
                 `ID do cadastro: ${generatedId}\n` +
                 `Nome da criança: ${nomeCrianca}`
-            );
+            )
 
-            // Neste exemplo, a mensagem será enviada para o próprio número cadastrado.
-            const whatsappURL = `https://wa.me/${telefone}?text=${message}`;
-            window.open(whatsappURL, '_blank');
+            // URL para enviar a mensagem via WhatsApp
+            const whatsappURL = `https://wa.me/${telefone}?text=${message}`
+
+            // Atualiza a URL da janela popup
+            popup.location.href = whatsappURL
         } catch (error) {
-            console.error(error);
-            // Aqui você pode exibir uma mensagem de erro para o usuário
+            console.error(error)
+            // Fecha o popup em caso de erro
+            popup.close()
         }
     }
 
@@ -57,7 +67,6 @@ export function RegistrationForm() {
                     alt="Imagem de Exemplo"
                     width={100}
                     height={100}
-                // className="rounded-lg shadow-lg"
                 />
             </div>
 
