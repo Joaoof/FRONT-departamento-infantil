@@ -9,7 +9,7 @@ export function Illustration() {
                 <div className="absolute top-0 -right-4 w-72 h-72 bg-blue-100 rounded-full mix-blend-multiply filter blur-xl opacity-50 animate-blob animation-delay-2000"></div>
                 <div className="absolute -bottom-8 left-20 w-72 h-72 bg-yellow-100 rounded-full mix-blend-multiply filter blur-xl opacity-50 animate-blob animation-delay-4000"></div>
                 <Image
-                    src="/crianca.svg"
+                    src="/catholic-bible-books-icon-by-Vexels.svg"
                     alt="Ilustração de Cadastro"
                     width={400}
                     height={400}

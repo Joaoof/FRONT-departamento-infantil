@@ -8,7 +8,7 @@ export default function CadastroPage() {
   return (
     <div className="min-h-screen bg-white flex">
       <Illustration />
-      <div className="flex-1 flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8">
+      <div className="flex-1 flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 bg-blue-100">
         <RegistrationForm />
       </div>
     </div>
