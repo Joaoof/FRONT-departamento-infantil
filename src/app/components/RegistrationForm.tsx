@@ -10,7 +10,7 @@ import axios from 'axios'
 export function RegistrationForm() {
     const [nome, setNome] = useState('')
     const [nomeCrianca, setNomeCrianca] = useState('')
-    const [telefone, setTelefone] = useState('')
+    const [telefone, setTelefone] = useState('+55')
     const [showConfirmation, setShowConfirmation] = useState(false)
 
     // Ao submeter o formulário, apenas mostra a modal de confirmação com os dados preenchidos
