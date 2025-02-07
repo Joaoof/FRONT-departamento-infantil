@@ -7,6 +7,8 @@ import { RegistrationForm } from "@/app/components/RegistrationForm"
 export default function CadastroPage() {
     return (
         <div className="min-h-screen bg-white flex">
+            <link rel="icon" href="/favicon.jpg" />
+
             <Illustration />
             <div className="flex-1 flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8">
                 <RegistrationForm />
