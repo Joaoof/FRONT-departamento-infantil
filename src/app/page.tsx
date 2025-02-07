@@ -8,7 +8,7 @@ import Image from "next/image"
 
 
 export default function CadastroPage() {
-  function toggleLoginModal(event: MouseEvent<HTMLButtonElement, MouseEvent>): void {
+  function toggleLoginModal(event: React.MouseEvent<HTMLButtonElement>): void {
     throw new Error("Function not implemented.")
   }
 
