@@ -11,19 +11,19 @@ export function RegistrationForm() {
     const [nome, setNome] = useState('')
     const [nomeCrianca, setNomeCrianca] = useState('')
     const [telefone, setTelefone] = useState('')
+    const [showConfirmation, setShowConfirmation] = useState(false) // Controla a exibição da notificação
+    const [editMode, setEditMode] = useState(false) // Controla o modo de edição
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
 
-        // Abre a janela popup imediatamente (ação disparada pelo clique do usuário)
-        const popup = window.open("", "_blank")
-        if (!popup) {
-            console.error("Popup bloqueado pelo navegador.")
-            return
-        }
+        // Exibe a notificação com os dados preenchidos
+        setShowConfirmation(true)
+    }
 
+    const handleConfirm = async () => {
         try {
-            const api_url = process.env.NEXT_PUBLIC_API_URL;
+            const api_url = process.env.NEXT_PUBLIC_API_URL
             const response = await axios(`${api_url}/api/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -36,26 +36,41 @@ export function RegistrationForm() {
                 throw new Error('Erro ao registrar os dados.')
             }
 
-            const data = response.data // Não é necessário await aqui novamente
+            const data = response.data
             const generatedId = data.id
 
-            // Monta a mensagem que será enviada via WhatsApp
-            const message = encodeURIComponent(
-                `Olá ${nome}, seu cadastro foi realizado com sucesso!\n` +
-                `ID do cadastro: ${generatedId}\n` +
-                `Nome da criança: ${nomeCrianca}`
+            // Pergunta ao usuário se deseja enviar as informações para o WhatsApp
+            const sendToWhatsApp = window.confirm(
+                `Deseja enviar as informações para o número ${telefone}?`
             )
 
-            // URL para enviar a mensagem via WhatsApp
-            const whatsappURL = `https://wa.me/${telefone}?text=${message}`
+            if (sendToWhatsApp) {
+                // Monta a mensagem que será enviada via WhatsApp
+                const message = encodeURIComponent(
+                    `Olá ${nome}, seu cadastro foi realizado com sucesso!\n` +
+                    `ID do cadastro: ${generatedId}\n` +
+                    `Nome da criança: ${nomeCrianca}`
+                )
 
-            // Atualiza a URL da janela popup
-            popup.location.href = whatsappURL
+                // URL para enviar a mensagem via WhatsApp
+                const whatsappURL = `https://wa.me/${telefone}?text=${message}`
+
+                // Abre o WhatsApp em uma nova aba
+                window.open(whatsappURL, '_blank')
+            }
+
+            // Fecha a notificação após o envio
+            setShowConfirmation(false)
         } catch (error) {
             console.error(error)
-            // Fecha o popup em caso de erro
-            popup.close()
+            alert('Ocorreu um erro ao enviar os dados. Tente novamente.')
         }
+    }
+
+    const handleEdit = () => {
+        // Habilita o modo de edição
+        setEditMode(true)
+        setShowConfirmation(false)
     }
 
     return (
@@ -129,6 +144,41 @@ export function RegistrationForm() {
                     </CardContent>
                 </Card>
             </div>
+
+            {/* Notificação de confirmação */}
+            {showConfirmation && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <Card className="w-full max-w-md">
+                        <CardContent className="pt-6">
+                            <h3 className="text-xl font-bold text-gray-900 mb-4">Confirme os dados</h3>
+                            <p className="text-gray-700">
+                                <strong>Nome do Responsável:</strong> {nome}
+                            </p>
+                            <p className="text-gray-700">
+                                <strong>Nome da Criança:</strong> {nomeCrianca}
+                            </p>
+                            <p className="text-gray-700">
+                                <strong>Telefone:</strong> {telefone}
+                            </p>
+
+                            <div className="mt-6 flex gap-4">
+                                <Button
+                                    onClick={handleEdit}
+                                    className="bg-gray-500 hover:bg-gray-600 text-white"
+                                >
+                                    Editar
+                                </Button>
+                                <Button
+                                    onClick={handleConfirm}
+                                    className="bg-blue-500 hover:bg-blue-600 text-white"
+                                >
+                                    Confirmar
+                                </Button>
+                            </div>
+                        </CardContent>
+                    </Card>
+                </div>
+            )}
         </div>
     )
 }
