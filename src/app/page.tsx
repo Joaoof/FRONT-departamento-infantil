@@ -1,11 +1,10 @@
 // app/cadastro/page.tsx
 "use client"
 
-import { Illustration } from "@/app/components/llustration"
-import { RegistrationForm } from "@/app/components/RegistrationForm"
+import { Illustration } from "@/app/components/Ilustracao"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
-
+import { RegistrationForm } from "./components/Formulario"
 
 export default function CadastroPage() {
   function toggleLoginModal(event: React.MouseEvent<HTMLButtonElement>): void {
