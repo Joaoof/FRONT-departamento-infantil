@@ -38,6 +38,8 @@ interface CadastroPermanenteProps {
     nomeResponsavel: string;
     setNomeResponsavel: (nome: string) => void;
     telefone: string;
+    tipoCadastro: string;
+    setTipoCadastro: (tipo: string) => void;
     setTelefone: (telefone: string) => void;
     handleImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleCadastroPermanente: () => void;
