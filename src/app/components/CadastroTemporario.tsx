@@ -11,8 +11,8 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 interface TemporaryRegistrationFormProps {
     setStep: (step: number) => void;
     setShowConfirmation: (show: boolean) => void;
-    setTipoCadastro: (tipo: string) => void;
-    tipoCadastro: string;
+    setTipoCadastro: (tipo: string[]) => void;
+    tipoCadastro: string[];
     nome: string;
     setNome: (nome: string) => void;
     nomeCrianca: string;
@@ -88,8 +88,8 @@ export function TemporaryRegistrationForm({ setStep, setShowConfirmation, setTip
                                 </div>
                                 <div className="space-y-2">
                                     <Label>Tipo de Cadastro</Label>
-                                    <RadioGroup value={tipoCadastro} onValueChange={(value) => {
-                                        setTipoCadastro(value); // Atualiza o tipo de cadastro
+                                    <RadioGroup value={tipoCadastro[0]} onValueChange={(value) => {
+                                        setTipoCadastro([value]); // Atualiza o tipo de cadastro
                                         if (value === "permanente") {
                                             setStep(2); // Muda para o formulário permanente
                                         }

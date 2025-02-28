@@ -4,11 +4,12 @@ import { useState } from 'react'
 import axios from 'axios'
 import { TemporaryRegistrationForm } from './CadastroTemporario'
 import { CadastroPermanente } from './CadastroPermanente'
+import { toast } from 'react-toastify'
 
 export function RegistrationForm() {
     const [step, setStep] = useState(1)
     const [showConfirmation, setShowConfirmation] = useState(false)
-    const [tipoCadastro, setTipoCadastro] = useState('hoje')
+    const [tipoCadastro, setTipoCadastro] = useState<string[]>(['hoje'])
 
     // Campos comuns
     const [nome, setNome] = useState('')
@@ -74,9 +75,6 @@ export function RegistrationForm() {
             //     imageUrl = await uploadImage(fotoCrianca, formId)
             // }
 
-            setTipoCadastro("permanente"); // 🔥 Garante que está como permanente
-
-
             const api_url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
             const response = await axios.post(
                 `${api_url}/api/form`,
@@ -89,30 +87,50 @@ export function RegistrationForm() {
                     alergias,
                     observacoes,
                     fotoCrianca: imageUrl,
-                    tipoCadastro: 'permanente'
+                    tipoCadastro: ['permanente']
                 },
                 { headers: { 'Content-Type': 'application/json' } }
             )
 
-            if (response.data) {
-                alert('Cadastro permanente realizado com sucesso!')
+            console.log(response);
+
+
+            if (response.status !== 201) {
+                console.log(response);
+
+                if (response.data.details && Array.isArray(response.data.details)) {
+                    response.data.details.forEach((error: any) => {
+                        toast.error(error.message); // Mostra cada erro separadamente
+                    });
+                } else {
+                    toast.error("Erro desconhecido ao cadastrar.");
+                }
             } else {
-                console.error("Erro no cadastro")
+                toast.success("Cadastro realizado com sucesso!");
             }
-        } catch (error) {
-            console.error(error)
-            alert('Ocorreu um erro ao enviar os dados. Tente novamente.')
+        } catch (error: any) {
+            console.log(error);
+            toast.error(error.message || "Erro ao cadastrar. Por favor, tente novamente.");
         }
     }
+    const validateForm = () => {
+        if (!nome || !nomeCrianca || !telefone) {
+            toast.error('Por favor, preencha todos os campos obrigatórios.')
+            return false
+        }
+        return true
+    }
+
 
     const handleConfirm = async () => {
-        const sanitizedPhone = telefone.replace(/\s+/g, '')
+        // toast.info('Validando informações...')
 
-        const popup = window.open('', '_blank')
-        if (!popup) {
-            alert('Popup bloqueado pelo navegador. Por favor, permita pop-ups para este site.')
+        // Validação dos campos obrigatórios
+        if (!validateForm()) {
             return
         }
+
+        const sanitizedPhone = telefone.replace(/\s+/g, '')
 
         try {
             const api_url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
@@ -126,23 +144,86 @@ export function RegistrationForm() {
                 throw new Error('Erro ao registrar os dados.')
             }
 
-            const generatedId = response.data.redirectRoute.id
+            if (response.status !== 201) {
+                console.log(response)
 
-            const message = encodeURIComponent(
-                `Olá ${nome}, seu cadastro foi realizado com sucesso!\n` +
-                `ID do cadastro: ${generatedId}\n` +
-                `Nome da criança: ${nomeCrianca}`
-            )
-            const whatsappURL = `https://wa.me/${sanitizedPhone}?text=${message}`
+                if (response.data.details && Array.isArray(response.data.details)) {
+                    response.data.details.forEach((error: any) => {
+                        toast.error(error.message)
+                    })
+                } else {
+                    toast.error('Erro desconhecido ao cadastrar.')
+                }
+            } else {
+                toast.success('Cadastro realizado com sucesso!')
 
-            popup.location.href = whatsappURL
-            setShowConfirmation(false)
-        } catch (error) {
-            console.error(error)
-            alert('Ocorreu um erro ao enviar os dados. Tente novamente.')
-            popup.close()
+                // Gera a mensagem para o WhatsApp
+                const generatedId = response.data.redirectRoute.id
+                const message = encodeURIComponent(
+                    `Olá ${nome}, seu cadastro foi realizado com sucesso!\n` +
+                    `ID do cadastro: ${generatedId}\n` +
+                    `Nome da criança: ${nomeCrianca}`
+                )
+                const whatsappURL = `https://wa.me/${sanitizedPhone}?text=${message}`
+
+                // Exibe uma notificação interativa perguntando se o usuário deseja enviar para o WhatsApp
+                toast.info(
+                    <div>
+                        <p>Deseja enviar os dados para o WhatsApp?</p>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '10px' }}>
+                            <button
+                                style={{
+                                    padding: '5px 10px',
+                                    backgroundColor: '#25D366',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '5px',
+                                    cursor: 'pointer',
+                                }}
+                                onClick={() => {
+                                    const popup = window.open(whatsappURL, '_blank')
+                                    if (!popup) {
+                                        toast.error('Popup bloqueado pelo navegador. Por favor, permita pop-ups para este site.')
+                                    }
+                                    toast.dismiss() // Fecha a notificação
+                                }}
+                            >
+                                Sim, enviar
+                            </button>
+                            <button
+                                style={{
+                                    padding: '5px 10px',
+                                    backgroundColor: '#ff4444',
+                                    color: 'white',
+                                    border: 'none',
+                                    borderRadius: '5px',
+                                    cursor: 'pointer',
+                                }}
+                                onClick={() => toast.dismiss()} // Fecha a notificação
+                            >
+                                Não, obrigado
+                            </button>
+                        </div>
+                    </div>,
+                    {
+                        autoClose: false, // Impede que a notificação feche automaticamente
+                        closeButton: false, // Remove o botão de fechar padrão
+                    }
+                )
+
+                setShowConfirmation(false)
+            }
+        } catch (error: any) {
+            if (error.response?.data?.details && Array.isArray(error.response.data.details)) {
+                error.response.data.details.forEach((error: any) => {
+                    toast.error(error.message)
+                })
+            } else {
+                toast.error('Erro ao cadastrar. Por favor, tente novamente.')
+            }
         }
     }
+
 
     const handleEdit = () => {
         setShowConfirmation(false)

@@ -12,6 +12,8 @@ import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
+import { toast } from 'react-toastify';
+import CadastroPermanenteFuncao from '@/api/CadastroPermanent';
 
 interface CadastroPermanenteProps {
     setStep: (step: number) => void;
@@ -38,8 +40,8 @@ interface CadastroPermanenteProps {
     nomeResponsavel: string;
     setNomeResponsavel: (nome: string) => void;
     telefone: string;
-    tipoCadastro: string;
-    setTipoCadastro: (tipo: string) => void;
+    tipoCadastro: string[];
+    setTipoCadastro: (tipo: string[]) => void;
     setTelefone: (telefone: string) => void;
     handleImageChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
     handleCadastroPermanente: () => void;
@@ -73,6 +75,8 @@ export function CadastroPermanente({
     setNomeResponsavel,
     telefone,
     setTelefone,
+    tipoCadastro,
+    setTipoCadastro
 }: CadastroPermanenteProps) {
 
     const [isCadastroConcluido, setIsCadastroConcluido] = useState(false);
@@ -85,8 +89,10 @@ export function CadastroPermanente({
         e.preventDefault();
         setIsLoading(true);
         try {
-            const api_url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-            const response = await axios.post(`${api_url}/api/form`, {
+            const response = await CadastroPermanenteFuncao({
+                nome,
+                nomeResponsavel,
+                telefone,
                 email,
                 endereco,
                 cidade,
@@ -94,31 +100,47 @@ export function CadastroPermanente({
                 cep,
                 alergias,
                 observacoes,
-                nome,
-                nomeResponsavel,
-                telefone
+                tipoCadastro,
             });
 
-            console.log(response.data);
+            console.log(response);
 
+            if (response.status !== 201) {
+                console.log(response);
 
-            if (response.data) {
-                setFormId(response.data.cadastro);
-                setIsCadastroConcluido(true);
+                if (response.data.details && Array.isArray(response.data.details)) {
+                    response.data.details.forEach((error) => {
+                        toast.error(error.message); // Mostra cada erro separadamente
+                    });
+                } else {
+                    toast.error("Erro desconhecido ao cadastrar.");
+                }
             } else {
-                throw new Error("Resposta inválida do servidor");
+                toast.success("Cadastro realizado com sucesso!");
+                setFormId(response.data.cadastro); // Define o ID do formulário
+                setIsCadastroConcluido(true); // Marca o cadastro como concluído
             }
-        } catch (error) {
-            console.error("Erro ao cadastrar:", error);
-            alert("Erro ao cadastrar. Por favor, tente novamente.");
+        } catch (error: any) {
+            console.log(error);
+
+            toast.error(error.message || "Erro ao cadastrar. Por favor, tente novamente.");
         } finally {
-            setIsLoading(false);
+            setIsLoading(false); // Desativa o estado de carregamento, independentemente do resultado
         }
-    };
+    }
 
     const handleUploadImage = async () => {
         if (!fotoCrianca || !formId) {
-            alert("Selecione uma foto e complete o cadastro primeiro.");
+            // Exibe um aviso usando React Toastify
+            toast.warn("Selecione uma foto e complete o cadastro primeiro.", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "colored",
+            });
             return;
         }
 
@@ -136,14 +158,29 @@ export function CadastroPermanente({
             });
 
             if (response.data.success) {
-                alert("Cadastro concluído com sucesso!");
+                toast.success("Cadastro concluído com sucesso!", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    theme: "colored",
+                });
                 router.push("/confirmacao");
             } else {
                 throw new Error("Falha no upload da imagem");
             }
-        } catch (error) {
-            console.error("Erro ao enviar foto:", error);
-            alert("Erro ao enviar foto. Por favor, tente novamente.");
+        } catch (error: any) {
+            toast.error(error.response?.data?.message || "Erro ao enviar foto. Por favor, tente novamente.", {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                theme: "colored",
+            });
         } finally {
             setUploadProgress(0);
         }

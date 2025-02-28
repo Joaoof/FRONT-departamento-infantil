@@ -19,14 +19,12 @@ export default function ConfirmacaoPage() {
     const [currentVerseIndex, setCurrentVerseIndex] = useState(0);
 
     useEffect(() => {
-        // Trigger confetti animation on component mount
         confetti({
             particleCount: 100,
             spread: 70,
             origin: { y: 0.6 }
         });
 
-        // Change verse every 10 seconds
         const interval = setInterval(() => {
             setCurrentVerseIndex((prevIndex) => (prevIndex + 1) % biblicalVerses.length);
         }, 10000);
