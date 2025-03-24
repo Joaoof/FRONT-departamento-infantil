@@ -209,7 +209,7 @@ export function CadastroPermanente({
                             exit={{ opacity: 0, scale: 0.95 }}
                             transition={{ duration: 0.5 }}
                         >
-                            <Card className="backdrop-blur-sm bg-white/30">
+                            <Card className="backdrop-blur-sm">
                                 <CardHeader>
                                     <CardTitle>Informações Pessoais</CardTitle>
                                     <CardDescription>Preencha os dados abaixo com atenção</CardDescription>
