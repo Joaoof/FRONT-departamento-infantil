@@ -74,7 +74,7 @@ export default function ConfirmacaoPage() {
                             >
                                 <Book className="w-8 h-8 text-purple-600 mx-auto mb-4" />
                                 <p className="text-lg font-serif italic mb-2">
-                                    "{biblicalVerses[currentVerseIndex].verse}"
+                                    {`"${biblicalVerses[currentVerseIndex].verse}"`}
                                 </p>
                                 <p className="text-sm text-gray-600">
                                     - {biblicalVerses[currentVerseIndex].reference}

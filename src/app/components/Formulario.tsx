@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from 'react'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 import { TemporaryRegistrationForm } from './CadastroTemporario'
 import { CadastroPermanente } from './CadastroPermanente'
 import { toast } from 'react-toastify'
@@ -70,10 +70,7 @@ export function RegistrationForm() {
         console.log('Enviando dados para o servidor...')
 
         try {
-            let imageUrl = ''
-            // if (fotoCrianca) {
-            //     imageUrl = await uploadImage(fotoCrianca, formId)
-            // }
+            const imageUrl = ''
 
             const api_url = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'
             const response = await axios.post(
@@ -99,18 +96,17 @@ export function RegistrationForm() {
                 console.log(response);
 
                 if (response.data.details && Array.isArray(response.data.details)) {
-                    response.data.details.forEach((error: any) => {
-                        toast.error(error.message); // Mostra cada erro separadamente
-                    });
+                    response.data.details.forEach((error: Error) => toast.error(error.message));
                 } else {
                     toast.error("Erro desconhecido ao cadastrar.");
                 }
             } else {
                 toast.success("Cadastro realizado com sucesso!");
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.log(error);
-            toast.error(error.message || "Erro ao cadastrar. Por favor, tente novamente.");
+            if (error instanceof Error)
+                toast.error(error.message || "Erro ao cadastrar. Por favor, tente novamente.");
         }
     }
     const validateForm = () => {
@@ -148,7 +144,7 @@ export function RegistrationForm() {
                 console.log(response)
 
                 if (response.data.details && Array.isArray(response.data.details)) {
-                    response.data.details.forEach((error: any) => {
+                    response.data.details.forEach((error: Error) => {
                         toast.error(error.message)
                     })
                 } else {
@@ -213,14 +209,15 @@ export function RegistrationForm() {
 
                 setShowConfirmation(false)
             }
-        } catch (error: any) {
-            if (error.response?.data?.details && Array.isArray(error.response.data.details)) {
-                error.response.data.details.forEach((error: any) => {
-                    toast.error(error.message)
-                })
-            } else {
-                toast.error('Erro ao cadastrar. Por favor, tente novamente.')
-            }
+        } catch (error: unknown) {
+            if (error instanceof AxiosError)
+                if (error.response?.data?.details && Array.isArray(error.response.data.details)) {
+                    error.response.data.details.forEach((error: Error) => {
+                        toast.error(error.message)
+                    })
+                } else {
+                    toast.error('Erro ao cadastrar. Por favor, tente novamente.')
+                }
         }
     }
 

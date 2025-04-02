@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -8,7 +8,7 @@ import { Label } from '@/components/ui/label';
 import { Camera, Upload, CheckCircle } from 'lucide-react';
 import Image from "next/image";
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Textarea } from "@/components/ui/textarea";
 import { Progress } from "@/components/ui/progress";
@@ -48,7 +48,6 @@ interface CadastroPermanenteProps {
 }
 
 export function CadastroPermanente({
-    setStep,
     email,
     setEmail,
     endereco,
@@ -64,19 +63,15 @@ export function CadastroPermanente({
     observacoes,
     setObservacoes,
     fotoCrianca,
-    setFotoCrianca,
     fotoPreview,
-    setFotoPreview,
     handleImageChange,
-    handleCadastroPermanente,
     nome,
     setNome,
     nomeResponsavel,
     setNomeResponsavel,
     telefone,
     setTelefone,
-    tipoCadastro,
-    setTipoCadastro
+    tipoCadastro
 }: CadastroPermanenteProps) {
 
     const [isCadastroConcluido, setIsCadastroConcluido] = useState(false);
@@ -117,13 +112,14 @@ export function CadastroPermanente({
                 }
             } else {
                 toast.success("Cadastro realizado com sucesso!");
-                setFormId(response.data.cadastro); // Define o ID do formulário
-                setIsCadastroConcluido(true); // Marca o cadastro como concluído
+                if (response.data.cadastro)
+                    setFormId(response.data.cadastro);
+                setIsCadastroConcluido(true);
             }
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.log(error);
-
-            toast.error(error.message || "Erro ao cadastrar. Por favor, tente novamente.");
+            if (error instanceof Error)
+                toast.error(error.message || "Erro ao cadastrar. Por favor, tente novamente.");
         } finally {
             setIsLoading(false); // Desativa o estado de carregamento, independentemente do resultado
         }
@@ -171,16 +167,17 @@ export function CadastroPermanente({
             } else {
                 throw new Error("Falha no upload da imagem");
             }
-        } catch (error: any) {
-            toast.error(error.response?.data?.message || "Erro ao enviar foto. Por favor, tente novamente.", {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                theme: "colored",
-            });
+        } catch (error: unknown) {
+            if (error instanceof AxiosError)
+                toast.error(error.response?.data?.message || "Erro ao enviar foto. Por favor, tente novamente.", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    theme: "colored",
+                });
         } finally {
             setUploadProgress(0);
         }

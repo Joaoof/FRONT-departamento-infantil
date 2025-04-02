@@ -138,27 +138,6 @@ export function DashboardContent() {
         })
     }
 
-    const handleRefresh = () => {
-        setIsLoading(true)
-
-        // Clear filters
-        setSearchTerm("")
-        setSearchById("")
-        setSelectedDate(undefined)
-        setSelectedGroup("")
-
-        // Simulate API call delay
-        setTimeout(() => {
-            setFilteredRegistrations(registrations)
-            setIsLoading(false)
-
-            toast({
-                title: "Dados atualizados 🔄",
-                description: "A lista de crianças foi atualizada.",
-            })
-        }, 800)
-    }
-
     const handleExport = (format: string) => {
         toast({
             title: "Exportando dados 📊",
