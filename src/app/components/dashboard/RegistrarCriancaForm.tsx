@@ -1,17 +1,18 @@
 "use client"
 
-import type React from "react"
-
-import { useState } from "react"
 import { format } from "date-fns"
+import type React from "react"
+import { useState } from "react"
+
 import { Button } from "@/components/ui/button"
+import { DialogFooter } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { DialogFooter } from "@/components/ui/dialog"
-import { DatePickerWithPresets } from "./Data"
+
 import type { Child } from "../lib/data"
+import { DatePickerWithPresets } from "./Data"
 
 interface RegisterChildFormProps {
     onClose: () => void

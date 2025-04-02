@@ -1,15 +1,16 @@
 "use client"
 
-import { useState } from "react"
 import { motion } from "framer-motion"
+import { RefreshCw } from "lucide-react"
+import { useState } from "react"
+
 import { Button } from "@/components/ui/button"
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
-import { RefreshCw } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
 
 import { AppSidebar } from "../components/app-siderbar"
-import { DashboardContent } from "../components/dashboard/DashboardContent"
 import { CommunicationContent } from "../components/comunicacao/ComunicaoContent"
+import { DashboardContent } from "../components/dashboard/DashboardContent"
 
 export default function EnhancedAdminDashboard() {
     const [activeView, setActiveView] = useState("dashboard")

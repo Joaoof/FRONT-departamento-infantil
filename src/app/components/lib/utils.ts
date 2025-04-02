@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
 import { format, isToday, isYesterday } from "date-fns"
 import { ptBR } from "date-fns/locale"
+import { twMerge } from "tailwind-merge"
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs))

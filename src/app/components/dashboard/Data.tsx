@@ -2,10 +2,11 @@
 
 import { format, subDays } from "date-fns"
 import { ptBR } from "date-fns/locale"
+import { CalendarPlus2Icon as CalendarIcon2 } from "lucide-react"
+
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { CalendarPlus2Icon as CalendarIcon2 } from "lucide-react"
 
 export function DatePickerWithPresets({
     date,

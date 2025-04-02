@@ -1,50 +1,51 @@
 "use client"
 
+import { format } from "date-fns"
 import { motion } from "framer-motion"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import {
+    CalendarIcon,
+    Download,
+    Filter,
+    Mail,
+    PlusCircle,
+    Printer,
+    RefreshCw,
+    Search,
+    UserPlus,
+    Users,
+} from "lucide-react"
+import { useCallback,useEffect, useState } from "react"
+import {
+    Bar,
+    BarChart,
+    CartesianGrid,
+    Cell,
+    Legend,
+    Line,
+    LineChart,
+    Pie,
+    PieChart,
+    ResponsiveContainer,
+    Tooltip as RechartsTooltip,
+    XAxis,
+    YAxis,
+} from "recharts"
+
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription,CardHeader, CardTitle } from "@/components/ui/card"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Separator } from "@/components/ui/separator"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import {
-    PlusCircle,
-    Users,
-    CalendarIcon,
-    UserPlus,
-    Search,
-    Filter,
-    Download,
-    Printer,
-    Mail,
-    RefreshCw,
-} from "lucide-react"
-import {
-    LineChart,
-    Line,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip as RechartsTooltip,
-    ResponsiveContainer,
-    PieChart,
-    Pie,
-    Cell,
-    Legend,
-    BarChart,
-    Bar,
-} from "recharts"
-import { format } from "date-fns"
-import { useState, useEffect, useCallback } from "react"
-
-import { ChildrenTable } from "./CriancaTabela"
-import { RegisterChildForm } from "./RegistrarCriancaForm"
-import { DatePickerWithPresets } from "./Data"
 import { toast } from "@/hooks/use-toast"
-import { type Child, chartData, ageDistribution, registrations } from "../lib/data"
+
+import { ageDistribution, chartData, type Child, registrations } from "../lib/data"
+import { ChildrenTable } from "./CriancaTabela"
+import { DatePickerWithPresets } from "./Data"
+import { RegisterChildForm } from "./RegistrarCriancaForm"
 
 const COLORS = ["#4f46e5", "#0ea5e9", "#10b981", "#f59e0b"]
 

@@ -1,5 +1,7 @@
 "use client"
 
+import { BellRing, CalendarDays, FileText, HomeIcon, LogOut, Mail,MessageCircle, Settings } from "lucide-react"
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
     Sidebar,
@@ -7,11 +9,10 @@ import {
     SidebarFooter,
     SidebarHeader,
     SidebarMenu,
-    SidebarMenuItem,
     SidebarMenuButton,
+    SidebarMenuItem,
     SidebarSeparator,
 } from "@/components/ui/sidebar"
-import { HomeIcon, MessageCircle, CalendarDays, FileText, Settings, BellRing, LogOut, Mail } from "lucide-react"
 
 interface AppSidebarProps {
     activeView: string

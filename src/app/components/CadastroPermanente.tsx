@@ -1,19 +1,20 @@
-"use client";
+"use client"
 
-import { useState } from 'react';
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Label } from '@/components/ui/label';
-import { Camera, Upload, CheckCircle } from 'lucide-react';
-import Image from "next/image";
-import { useRouter } from 'next/navigation';
-import axios, { AxiosError } from 'axios';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Textarea } from "@/components/ui/textarea";
-import { Progress } from "@/components/ui/progress";
-import { toast } from 'react-toastify';
-import CadastroPermanenteFuncao from '@/api/CadastroPermanent';
+import axios, { AxiosError } from 'axios'
+import { AnimatePresence,motion } from 'framer-motion'
+import { Camera, CheckCircle,Upload } from 'lucide-react'
+import Image from "next/image"
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { toast } from 'react-toastify'
+
+import CadastroPermanenteFuncao from '@/api/CadastroPermanent'
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardDescription,CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
+import { Label } from '@/components/ui/label'
+import { Progress } from "@/components/ui/progress"
+import { Textarea } from "@/components/ui/textarea"
 
 interface CadastroPermanenteProps {
     setStep: (step: number) => void;
@@ -74,15 +75,15 @@ export function CadastroPermanente({
     tipoCadastro
 }: CadastroPermanenteProps) {
 
-    const [isCadastroConcluido, setIsCadastroConcluido] = useState(false);
-    const [formId, setFormId] = useState<string | number | null>(null);
-    const [isLoading, setIsLoading] = useState(false);
-    const [uploadProgress, setUploadProgress] = useState(0);
-    const router = useRouter();
+    const [isCadastroConcluido, setIsCadastroConcluido] = useState(false)
+    const [formId, setFormId] = useState<string | number | null>(null)
+    const [isLoading, setIsLoading] = useState(false)
+    const [uploadProgress, setUploadProgress] = useState(0)
+    const router = useRouter()
 
     const handleCadastro = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setIsLoading(true);
+        e.preventDefault()
+        setIsLoading(true)
         try {
             const response = await CadastroPermanenteFuncao({
                 nome,
@@ -96,32 +97,32 @@ export function CadastroPermanente({
                 alergias,
                 observacoes,
                 tipoCadastro,
-            });
+            })
 
-            console.log(response);
+            console.log(response)
 
             if (response.status !== 201) {
-                console.log(response);
+                console.log(response)
 
                 if (response.data.details && Array.isArray(response.data.details)) {
                     response.data.details.forEach((error) => {
-                        toast.error(error.message); // Mostra cada erro separadamente
-                    });
+                        toast.error(error.message) // Mostra cada erro separadamente
+                    })
                 } else {
-                    toast.error("Erro desconhecido ao cadastrar.");
+                    toast.error("Erro desconhecido ao cadastrar.")
                 }
             } else {
-                toast.success("Cadastro realizado com sucesso!");
+                toast.success("Cadastro realizado com sucesso!")
                 if (response.data.cadastro)
-                    setFormId(response.data.cadastro);
-                setIsCadastroConcluido(true);
+                    setFormId(response.data.cadastro)
+                setIsCadastroConcluido(true)
             }
         } catch (error: unknown) {
-            console.log(error);
+            console.log(error)
             if (error instanceof Error)
-                toast.error(error.message || "Erro ao cadastrar. Por favor, tente novamente.");
+                toast.error(error.message || "Erro ao cadastrar. Por favor, tente novamente.")
         } finally {
-            setIsLoading(false); // Desativa o estado de carregamento, independentemente do resultado
+            setIsLoading(false) // Desativa o estado de carregamento, independentemente do resultado
         }
     }
 
@@ -136,22 +137,22 @@ export function CadastroPermanente({
                 pauseOnHover: true,
                 draggable: true,
                 theme: "colored",
-            });
-            return;
+            })
+            return
         }
 
-        const formData = new FormData();
-        formData.append("fotoCrianca", fotoCrianca);
+        const formData = new FormData()
+        formData.append("fotoCrianca", fotoCrianca)
 
         try {
-            const api_url = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+            const api_url = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"
             const response = await axios.post(`${api_url}/api/form/${formId}/upload-image`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },
                 onUploadProgress: (progressEvent) => {
-                    const percentCompleted = Math.round((progressEvent.loaded * 100) / (progressEvent.total ?? 1));
-                    setUploadProgress(percentCompleted);
+                    const percentCompleted = Math.round((progressEvent.loaded * 100) / (progressEvent.total ?? 1))
+                    setUploadProgress(percentCompleted)
                 }
-            });
+            })
 
             if (response.data.success) {
                 toast.success("Cadastro concluído com sucesso!", {
@@ -162,10 +163,10 @@ export function CadastroPermanente({
                     pauseOnHover: true,
                     draggable: true,
                     theme: "colored",
-                });
-                router.push("/confirmacao");
+                })
+                router.push("/confirmacao")
             } else {
-                throw new Error("Falha no upload da imagem");
+                throw new Error("Falha no upload da imagem")
             }
         } catch (error: unknown) {
             if (error instanceof AxiosError)
@@ -177,11 +178,11 @@ export function CadastroPermanente({
                     pauseOnHover: true,
                     draggable: true,
                     theme: "colored",
-                });
+                })
         } finally {
-            setUploadProgress(0);
+            setUploadProgress(0)
         }
-    };
+    }
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-blue-100 py-12 px-4 sm:px-6 lg:px-8">
@@ -395,5 +396,5 @@ export function CadastroPermanente({
                 </AnimatePresence>
             </div>
         </div>
-    );
+    )
 }

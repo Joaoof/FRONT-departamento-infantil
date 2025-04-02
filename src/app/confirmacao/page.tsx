@@ -1,11 +1,12 @@
-"use client";
+"use client"
 
-import { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { CheckCircle, Heart, Book } from 'lucide-react';
-import confetti from 'canvas-confetti';
+import confetti from 'canvas-confetti'
+import { AnimatePresence,motion } from 'framer-motion'
+import { Book,CheckCircle, Heart } from 'lucide-react'
+import { useEffect,useState } from 'react'
+
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 const biblicalVerses = [
     { verse: "Porque Deus amou o mundo de tal maneira que deu o seu Filho unigênito, para que todo aquele que nele crê não pereça, mas tenha a vida eterna.", reference: "João 3:16" },
@@ -13,24 +14,24 @@ const biblicalVerses = [
     { verse: "Tudo posso naquele que me fortalece.", reference: "Filipenses 4:13" },
     { verse: "Porque eu bem sei os planos que tenho para vós, diz o Senhor; planos de paz, e não de mal, para vos dar um futuro e uma esperança.", reference: "Jeremias 29:11" },
     { verse: "Vinde a mim, todos os que estais cansados e oprimidos, e eu vos aliviarei.", reference: "Mateus 11:28" }
-];
+]
 
 export default function ConfirmacaoPage() {
-    const [currentVerseIndex, setCurrentVerseIndex] = useState(0);
+    const [currentVerseIndex, setCurrentVerseIndex] = useState(0)
 
     useEffect(() => {
         confetti({
             particleCount: 100,
             spread: 70,
             origin: { y: 0.6 }
-        });
+        })
 
         const interval = setInterval(() => {
-            setCurrentVerseIndex((prevIndex) => (prevIndex + 1) % biblicalVerses.length);
-        }, 10000);
+            setCurrentVerseIndex((prevIndex) => (prevIndex + 1) % biblicalVerses.length)
+        }, 10000)
 
-        return () => clearInterval(interval);
-    }, []);
+        return () => clearInterval(interval)
+    }, [])
 
     return (
         <div className="min-h-screen bg-gradient-to-b from-purple-100 to-blue-100 py-12 px-4 sm:px-6 lg:px-8 flex items-center justify-center">
@@ -98,5 +99,5 @@ export default function ConfirmacaoPage() {
                 </Card>
             </motion.div>
         </div>
-    );
+    )
 }

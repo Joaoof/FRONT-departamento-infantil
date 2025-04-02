@@ -1,10 +1,11 @@
 "use client"
 
-import { useState } from 'react'
 import axios, { AxiosError } from 'axios'
-import { TemporaryRegistrationForm } from './CadastroTemporario'
-import { CadastroPermanente } from './CadastroPermanente'
+import { useState } from 'react'
 import { toast } from 'react-toastify'
+
+import { CadastroPermanente } from './CadastroPermanente'
+import { TemporaryRegistrationForm } from './CadastroTemporario'
 
 export function RegistrationForm() {
     const [step, setStep] = useState(1)
@@ -89,24 +90,24 @@ export function RegistrationForm() {
                 { headers: { 'Content-Type': 'application/json' } }
             )
 
-            console.log(response);
+            console.log(response)
 
 
             if (response.status !== 201) {
-                console.log(response);
+                console.log(response)
 
                 if (response.data.details && Array.isArray(response.data.details)) {
-                    response.data.details.forEach((error: Error) => toast.error(error.message));
+                    response.data.details.forEach((error: Error) => toast.error(error.message))
                 } else {
-                    toast.error("Erro desconhecido ao cadastrar.");
+                    toast.error("Erro desconhecido ao cadastrar.")
                 }
             } else {
-                toast.success("Cadastro realizado com sucesso!");
+                toast.success("Cadastro realizado com sucesso!")
             }
         } catch (error: unknown) {
-            console.log(error);
+            console.log(error)
             if (error instanceof Error)
-                toast.error(error.message || "Erro ao cadastrar. Por favor, tente novamente.");
+                toast.error(error.message || "Erro ao cadastrar. Por favor, tente novamente.")
         }
     }
     const validateForm = () => {

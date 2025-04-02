@@ -1,9 +1,10 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent } from "@/components/ui/card"
 import Image from "next/image"
+
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 
@@ -88,9 +89,9 @@ export function TemporaryRegistrationForm({ setStep, setShowConfirmation, setTip
                                 <div className="space-y-2">
                                     <Label>Tipo de Cadastro</Label>
                                     <RadioGroup value={tipoCadastro[0]} onValueChange={(value) => {
-                                        setTipoCadastro([value]); // Atualiza o tipo de cadastro
+                                        setTipoCadastro([value]) // Atualiza o tipo de cadastro
                                         if (value === "permanente") {
-                                            setStep(2); // Muda para o formulário permanente
+                                            setStep(2) // Muda para o formulário permanente
                                         }
                                     }}>
                                         <div className="flex items-center space-x-2">

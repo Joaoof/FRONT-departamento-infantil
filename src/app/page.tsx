@@ -2,9 +2,11 @@
 // app/cadastro/page.tsx
 "use client"
 
+import Image from "next/image"
+
 import { Illustration } from "@/app/components/Ilustracao"
 import { Button } from "@/components/ui/button"
-import Image from "next/image"
+
 import { RegistrationForm } from "./components/Formulario"
 
 export default function CadastroPage() {
