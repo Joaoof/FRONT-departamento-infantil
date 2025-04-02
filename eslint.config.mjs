@@ -27,13 +27,18 @@ export default defineConfig([
       "simple-import-sort": simpleImportSort,
     },
     rules: {
-      "semi": ["error", "never"], // Não permitir ponto e vírgula, exceto onde especificado
-      "simple-import-sort/imports": "error", // Ordenação de imports
-      "no-extra-semi": "error", // Evitar ponto e vírgula extra
+      "semi": ["error", "never"],
+      "simple-import-sort/imports": "error",
+      "no-extra-semi": "error",
     },
   },
   {
     ...pluginReact.configs.flat.recommended,
+    settings: {
+      react: {
+        version: "detect",
+      },
+    },
     rules: {
       ...pluginReact.configs.flat.recommended.rules,
       "react/react-in-jsx-scope": "off",
